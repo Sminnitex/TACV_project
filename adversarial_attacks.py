@@ -89,7 +89,7 @@ transfer_model.classifier = nn.Linear(transfer_model.classifier[1].in_features, 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-"""#Training loop
+#Training loop
 epochs = 5
 for epoch in range(epochs):
     model.train()
@@ -119,9 +119,9 @@ for epoch in range(epochs):
     epoch_accuracy = accuracy_score(train_labels, predictions)
     print(f"Epoch [{epoch+1}/{epochs}], Loss: {epoch_loss:.4f}, Accuracy: {epoch_accuracy:.4f}") 
 torch.save(model.state_dict(), save_path)
-print(f"Model weights saved to {save_path}")"""
+print(f"Model weights saved to {save_path}")
 
-"""#Testing loop
+#Testing loop
 model.load_state_dict(torch.load(save_path, weights_only=False))
 print(f"Model weights loaded from {save_path}")
 model.eval()
@@ -138,14 +138,14 @@ with torch.no_grad():
             
             pbar.update(1)
 accuracy = accuracy_score(all_labels, all_preds)
-print(f"Test Accuracy: {accuracy:.4f}") """
+print(f"Test Accuracy: {accuracy:.4f}") 
 
 #Adversarial attacks
 attacks = [
-    #("PGD", PGD(model), "_pgd.pt"),
+    ("PGD", PGD(model), "_pgd.pt"),
     ("Distortion Minimizing", DistortionMinimizingAttack(model, threshold=0.5, norm_type=2, epsilon=1/255, max_steps=6, alpha=0.5, c0=0, c1=100, binary_search_steps=7), "_dm.pt"),
-    #("Loss Maximizing", LossMaximizingAttack(model, norm_type=2, epsilon=0.1, steps=15, alpha=0.5), "_lm.pt"),
-    #("Universal Patch", UniversalAdversarialAttack(model, patch_size=(0.01, 0.01), steps=15, alpha=0.5, target_class=None), "_patch.pt"),
+    ("Loss Maximizing", LossMaximizingAttack(model, norm_type=2, epsilon=0.1, steps=15, alpha=0.5), "_lm.pt"),
+    ("Universal Patch", UniversalAdversarialAttack(model, patch_size=(0.01, 0.01), steps=15, alpha=0.5, target_class=None), "_patch.pt"),
     #("Universal Latent", UniversalLatentSpaceAttack(vae, model, latent_dim=latent_dim, batch_size=batch_size, steps=10, alpha=0.01, target_class=None), "_ulsa.pt"),
     #("Black Box Transfer", BlackBoxTransferAttack(model, target_classifier=transfer_model, threshold=0.5, norm_type=2, epsilon=1/255, max_steps=5, alpha=0.01, c0=0, c1=100, binary_search_steps=5), "_blackBox.pt"),
 ]
